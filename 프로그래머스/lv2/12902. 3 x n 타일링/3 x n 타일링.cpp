@@ -1,24 +1,9 @@
 #include <string>
 #include <vector>
+#include <iostream>
+#include <cmath>
 
 using namespace std;
-
-void fill(vector<vector<int>>& tile, vector<int>& temp)
-{
-    if(temp.size() == 3)
-    {
-        
-        return;
-    }
-    
-    for(int i = 0; i < 2; i++)
-    {
-        temp.push_back(i);
-        fill(tile, temp);
-        
-        temp.pop_back();
-    }
-}
 
 int solution(int n) {
     int answer = 0;
@@ -27,7 +12,6 @@ int solution(int n) {
     vector<long long> tile(n+1, 0);
     vector<int> temp;
     
-
     tile[0] = 1;
     tile[2] = 3;
 
