@@ -1,19 +1,14 @@
 #include <string>
 #include <vector>
-#include <bitset>
 #include <iostream>
 #include <algorithm>
+#include <queue>
 #include <set>
 
 using namespace std;
 
 int cnt = 0;
-vector<vector<int>> comb;
-
-bool cmp(vector<int>& a, vector<int> b)
-{
-    return a.size() < b.size();
-}
+set<vector<int>> candidate;
 
 bool checkKey(vector<vector<string>>& relation, vector<int>& temp)
 {
@@ -36,62 +31,80 @@ bool checkKey(vector<vector<string>>& relation, vector<int>& temp)
     return (now.size() == cntRow);
 }
 
-void makeComb(vector<vector<string>>& relation, int depth, vector<int>& temp)
-{       
-    if(depth == relation[0].size())
+void bfs(vector<vector<string>>& relation)
+{
+    int cntColumn = relation[0].size();
+    queue<pair<int, vector<int>>> q;
+    
+    for(int i = 0; i < cntColumn; i++)
     {
-        comb.push_back(temp);
-        return;
+        vector<int> temp;
+        temp.push_back(i);
+        
+        if(checkKey(relation, temp))
+        {
+            cnt++;
+            candidate.insert(temp);
+        }
+        else
+        {
+            q.push({i, temp});
+        }
     }
     
-    temp.push_back(depth);
-    makeComb(relation, depth+1, temp);
-    
-    temp.pop_back();
-    makeComb(relation, depth+1, temp);
-}
-
-int solution(vector<vector<string>> relation) {
-    int answer = 0;
-    
-    vector<int> temp;
-    makeComb(relation, 0, temp);
-    
-    set<vector<int>> keys;
-    
-    sort(comb.begin(), comb.end(), cmp);
-    for(auto c: comb)
+    while(!q.empty())
     {
-        if(checkKey(relation, c))
+        auto idx = q.front().first;
+        auto temp = q.front().second;
+        
+        q.pop();
+        
+        for(int i = idx+1; i < cntColumn; i++)
         {
-            if(keys.size() == 0) 
-            {
-                keys.insert(c);
-                answer++;
-                continue;
-            }
+            temp.push_back(i);
             
             bool flag = true;
-            for(auto key : keys)
+            for(auto key : candidate)
             {
                 vector<int> diff;
-                set_difference(key.begin(),key.end(),c.begin(),c.end(), std::back_inserter(diff));
-                
+                set_difference(key.begin(), key.end(), temp.begin(), temp.end(), std::back_inserter(diff));
+
                 if(diff.size() == 0) 
                 {
                     flag = false;
                     break;
                 }
             }
-            if(flag)
+                
+            if(!flag)
             {
-                keys.insert(c);
-                answer++;
+                temp.pop_back();
+                continue;
             }
+            
+            
+            if(checkKey(relation, temp))
+            {
+                cnt++;
+                candidate.insert(temp);
+            }
+            else
+            {
+                q.push({i, temp});
+            }
+            
+            temp.pop_back();
         }
     }
+}
+
+
+int solution(vector<vector<string>> relation) {
+    int answer = 0;
+    
+    bfs(relation);
+    // cout << cnt;
     
     
-    
-    return answer;
+    return cnt;
 }
