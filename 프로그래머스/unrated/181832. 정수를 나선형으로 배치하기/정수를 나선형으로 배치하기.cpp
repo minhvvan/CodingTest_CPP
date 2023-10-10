@@ -11,7 +11,7 @@ vector<vector<int>> solution(int n) {
     vector<int> dx = {1, 0, -1, 0};    
     int dir = 1;
     int limit = n-1;
-    int num = n;
+    int num = n+1;
     int cnt = 0;
     
     for(int i = 0; i < n; i++)
@@ -26,10 +26,10 @@ vector<vector<int>> solution(int n) {
     {
         for(int i = 0; i < limit; i++)
         {
-            answer[y][x] = num++;
-            
             y += dy[dir];
             x += dx[dir];
+            
+            answer[y][x] = num++;
         }
         
         //change dir
@@ -42,8 +42,6 @@ vector<vector<int>> solution(int n) {
             limit--;
         }
     }
-    
-    answer[y][x] = num;
     
     return answer;
 }
