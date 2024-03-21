@@ -66,36 +66,15 @@ vector<int> solution(vector<vector<int>> dice) {
         sort(ASums.begin(),ASums.end());
         sort(BSums.begin(),BSums.end()); 
         
-//         cout << "ASums: ";
-//         for(auto sum : ASums)
-//         {
-//             cout << sum << " ";
-//         }
-//         cout << "\n";
-        
-//         cout << "BSums: ";
-//         for(auto sum : BSums)
-//         {
-//             cout << sum << " ";
-//         }
-//         cout << "\n";
-        
-        
-//         cout << "\n";
-        
-        int winRate1 = 0, winRate2 = 0; 
+        int winRate = 0;
         for(int n : ASums){
             int win = lower_bound(BSums.begin(), BSums.end(), n) - BSums.begin(); 
-            if(win - 1 > 0) winRate1 += win; 
-        }
-        for(int n : BSums){
-            int win = lower_bound(ASums.begin(), ASums.end(), n) - ASums.begin(); 
-            if(win - 1 > 0) winRate2 += win; 
+            if(win - 1 > 0) winRate += win; 
         }
         
-        if(winRate1 > maxWin)
+        if(winRate > maxWin)
         {
-            maxWin = winRate1;
+            maxWin = winRate;
             candidate = APicks[i];
         }
     }
