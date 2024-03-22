@@ -7,25 +7,20 @@ int solution(string s)
 {
     if(s.size() % 2 == 1) return 0;
 
-    vector<int> unremovedIdx;
-    
-    unremovedIdx.push_back(0);
-    char prev = s[0];
+    vector<char> unremoved;
+    unremoved.push_back(s[0]);
     
     for(int i = 1; i < s.size(); i++)
     {
-        if(s[i] == prev)
+        if(unremoved.empty())
         {
-            unremovedIdx.pop_back();
-            if(!unremovedIdx.empty()) prev = s[unremovedIdx.back()];
-            else prev = ' ';
+            unremoved.push_back(s[i]);
+            continue;
         }
-        else
-        {
-            prev = s[i];
-            unremovedIdx.push_back(i);
-        }
+        
+        if(s[i] == unremoved.back()) unremoved.pop_back();
+        else unremoved.push_back(s[i]);
     }
     
-    return unremovedIdx.size() == 0;
+    return unremoved.size() == 0;
 }
