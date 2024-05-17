@@ -18,7 +18,6 @@ bool MoveToPlayer(pair<int, int>& Player, pair<int, int>& Robot)
     pair<int, int> result;
     int minDist = INT_MAX;
 
-    //cout << "Robot: " << "{" << Robot.first << ", " << Robot.second << "} -> ";
     for (int i = 0; i < 9; i++)
     {
         if (i == 4) continue;
@@ -34,7 +33,6 @@ bool MoveToPlayer(pair<int, int>& Player, pair<int, int>& Robot)
     }
 
     Robot = move(result);
-    //cout << "{" << Robot.first << ", " << Robot.second << "}\n";
     return minDist == 0;
 }
 
@@ -48,8 +46,6 @@ void Print(vector<vector<char>>& Board)
         }
         cout << "\n";
     }
-    cout << "\n";
-    cout << "\n";
 }
 
 int main()
@@ -86,7 +82,6 @@ int main()
         int dir = (Command[t] - '0') - 1;
 
         //move player
-        //cout << "Player: " << "{" << Player.first << ", " << Player.second << "} -> ";
         Player.first += dy[dir];
         Player.second += dx[dir];
 
@@ -99,11 +94,8 @@ int main()
             }
         }
 
-        //cout << "{" << Player.first << ", " << Player.second << "}\n";
-
-
         //move robots
-        map<pair<int, int>, vector<int>> robotPos;
+        map<pair<int, int>, int> robotPos;
         for (int i = 0 ; i < Robots.size(); i++)
         {
             if (MoveToPlayer(Player, Robots[i]))
@@ -111,19 +103,15 @@ int main()
                 cout << "kraj " << t + 1;
                 return 0;
             }
-            robotPos[Robots[i]].push_back(i);
+            robotPos[Robots[i]]++;
         }
 
         vector<pair<int, int>> robotTemp;
         for (auto itr = robotPos.begin(); itr != robotPos.end(); itr++)
         {
-            if (itr->second.size() <= 1)
+            if (itr->second <= 1)
             {
                 robotTemp.push_back(itr->first);
-            }
-            else
-            {
-                Board[itr->first.first][itr->first.second] = '.';
             }
         }
 
