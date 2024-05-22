@@ -85,7 +85,7 @@ int main()
     }
 
 
-    for (int i = 1; i <= maxNum; i++)
+    for (int i = 2; i <= maxNum; i++)
     {
         BFS(Pool, i);
 
