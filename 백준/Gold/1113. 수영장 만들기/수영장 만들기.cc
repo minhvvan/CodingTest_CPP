@@ -15,20 +15,6 @@ int N, M;
 vector<int> dy = { -1, 0 , 1, 0 };
 vector<int> dx = { 0, 1 , 0, -1 };
 
-void Print(vector<vector<int>>& Pool)
-{
-    for (auto row : Pool)
-    {
-        for (auto i : row)
-        {
-            cout << i;
-        }
-        cout << "\n";
-    }
-    cout << "\n";
-    cout << "\n";
-}
-
 void BFS(vector<vector<int>>& Pool, int l)
 {
     Pool[0][0] = l;
@@ -70,6 +56,7 @@ int main()
 
     vector<vector<int>> Pool(N + 2, vector<int>(M + 2, 0));
     int maxNum = 0;
+    int minNum = 10;
     int answer = 0;
 
     for (int i = 1; i <= N; i++)
@@ -81,11 +68,12 @@ int main()
             int t = temp[j - 1] - '0';
             Pool[i][j] = t;
             maxNum = max(maxNum, t);
+            minNum = min(minNum, t);
         }
     }
 
 
-    for (int i = 2; i <= maxNum; i++)
+    for (int i = minNum; i <= maxNum; i++)
     {
         BFS(Pool, i);
 
