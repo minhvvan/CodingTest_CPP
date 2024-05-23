@@ -66,9 +66,7 @@ int main()
         }
     }
 
-    if (answer == 0) cout << -1;
-    else cout << answer;
-    
+    cout << answer;
 
 	return 0;
 }
