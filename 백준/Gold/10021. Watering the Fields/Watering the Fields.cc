@@ -48,7 +48,7 @@ int main()
 
         for (int i = 0; i < N; i++)
         {
-            if (i == idx) continue;
+            if (visited[i]) continue;
 
             int d = (farms[i].first - farms[idx].first) * (farms[i].first - farms[idx].first) + (farms[i].second - farms[idx].second) * (farms[i].second - farms[idx].second);
             if (d < C) continue;
