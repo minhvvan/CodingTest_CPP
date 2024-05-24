@@ -11,6 +11,22 @@
 using namespace std;
 
 int N, M;
+vector<int> link;
+
+int find(int node)
+{
+    if (node == link[node]) return node;
+    return link[node] = find(link[node]); 
+}
+
+void unite(int a, int b)
+{
+    a = find(a);
+    b = find(b);
+
+    if (a < b) link[b] = a;
+    else link[a] = b;
+}
 
 int main()
 {
@@ -25,6 +41,8 @@ int main()
 
     for (int i = 0; i < N; i++)
     {
+        link.push_back(i);
+
         for (int j = 0; j < N; j++)
         {
             cin >> Roads[i][j];
@@ -33,37 +51,30 @@ int main()
 
     for (int i = 0; i < M; i++)
     {
-        cin >> Cities[i];
+        int temp;
+        cin >> temp;
+        Cities[i] = temp-1;
     }
 
     for (int i = 0; i < N; i++)
     {
-        Roads[i][i] = 1;
-    }
-
-    //플루이드
-    for (int k = 0; k < N; k++)
-    {
-        for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
         {
-            for (int j = 0; j < N; j++)
-            {
-                Roads[i][j] = Roads[i][j] | (Roads[i][k] & Roads[k][j]);
-            }
+            if (Roads[i][j] == 0) continue;
+            unite(i, j);
         }
     }
 
-    int currentCity = Cities[0]-1;
+    int currentCity = Cities[0];
     for (int i = 1; i < M; i++)
     {
-        if (Roads[currentCity][Cities[i] - 1])
+        if (link[currentCity] != link[Cities[i]])
         {
-            currentCity = Cities[i] - 1;
-            continue;
+            cout << "NO";
+            return 0;
         }
 
-        cout << "NO";
-        return 0;
+        currentCity = Cities[i];
     }
 
     cout << "YES";
