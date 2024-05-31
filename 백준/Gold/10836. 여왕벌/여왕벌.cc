@@ -32,41 +32,36 @@ int main()
 
     cin >> M >> N;
 
-    vector<vector<int>> growth;
-    vector<vector<int>> larvas(M, vector<int>(M, 1));
-
     const int GROWSIZE = M * 2 - 1;
+
+    vector<int> growth(GROWSIZE,0);
+    vector<vector<int>> larvas(M, vector<int>(M, 1));
 
     for (int i = 0; i < N; i++)
     {
-        vector<int> day;
+        int idx = 0;
         for (int j = 0; j < 3; j++)
         {
             int num;
             cin >> num;
 
-            for (int k = 0; k < num; k++) day.push_back(j);
+            for (int k = 0; k < num; k++) growth[idx++] += j;
         }
-
-        growth.push_back(day);
     }
 
-    for (int i = 0; i < N; i++)
+    int idx = 0;
+
+    for (int j = M - 1; j >= 0; j--) larvas[j][0] += growth[idx++];
+    for (int x = 1; x < M; x++)
     {
-        int idx = 0;
-
-        for (int j = M - 1; j >= 0; j--) larvas[j][0] += growth[i][idx++];
-        for (int x = 1; x < M; x++)
+        for (int y = 0; y < M; y++)
         {
-            for (int y = 0; y < M; y++)
-            {
-                larvas[y][x] += growth[i][idx];
-            }
-            idx++;
+            larvas[y][x] += growth[idx];
         }
+        idx++;
     }
 
-   Print(larvas);
+    Print(larvas);
 
 	return 0;
 }
