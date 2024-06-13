@@ -50,7 +50,7 @@ int BFS(vector<vector<char>>& Room, vector<pair<int, int>>& Doors)
         auto [y, x, dir, mirror] = dq.front();
         dq.pop_front();
 
-        if (mirror >= result) continue;
+        if (mirror >= result) break;
 
         int iterCnt = Room[y][x] == '!' ? 3 : 1;
         for (int i = 0; i < iterCnt; i++)
