@@ -46,11 +46,11 @@ int main()
                 {
                     length[k] = length[i] + 1;
                     select[k] = i;
-
-                    if (length[cursor] < length[k]) cursor = k;
                 }
             }
         }
+
+        if (length[cursor] < length[k]) cursor = k;
     }
 
     vector<int> selectedNum;
