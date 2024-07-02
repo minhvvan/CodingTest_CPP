@@ -14,7 +14,7 @@
 
 using namespace std;
 
-long long int N, K, Q;
+long long N, K, Q;
 
 int main()
 {
