@@ -24,24 +24,32 @@ int main()
 
     cin >> N >> K >> Q;
 
-    for (int i = 0; i < Q; ++i) {
-        long long int y, x;
-        cin >> y >> x;
-        long long int count = 0;
-        if (K == 1) {
-            count = abs(y - x);
+    for (int i = 0; i < Q; ++i)
+    {
+        long long a, b;
+        cin >> a >> b;
+        long long count = 0;
+        if (K == 1)
+        {
+            count = abs(a - b);
         }
-        else {
-            while (y != x) {
-                if (y > x) {
-                    y = (y - 2) / K + 1;
+        else
+        {
+            while (a != b)
+            {
+                if (a > b)
+                {
+                    a = (a - 2) / K + 1;
                 }
-                else {
-                    x = (x - 2) / K + 1;
+                else
+                {
+                    b = (b - 2) / K + 1;
                 }
-                ++count;
+
+                count++;
             }
         }
+
         cout << count << '\n';
     }
 
