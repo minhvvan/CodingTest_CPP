@@ -33,19 +33,12 @@ int main()
     dp[0] = 1;
     dp[2] = 3;
 
-    for (int n = 3; n <= N; n++)
+    for (int n = 4; n <= N; n += 2)
     {
-        if (n % 2 != 0)
+        for (int i = 2; i <= N; i += 2)
         {
-            dp[n] = 0;
-        }
-        else
-        {
-            for (int i = 2; i <= N; i += 2)
-            {
-                if (i == 2) dp[n] = dp[n - i] * dp[2];
-                else if ((n - i) >= 0) dp[n] += dp[n - i] * 2;
-            }
+            if (i == 2) dp[n] = dp[n - i] * dp[2];
+            else if ((n - i) >= 0) dp[n] += dp[n - i] * 2;
         }
     }
 
