@@ -35,6 +35,11 @@ struct Country
     {
         return gold == Other.gold && silver == Other.silver && bronze == Other.bronze;
     }
+
+    bool operator!=(const Country& Other) const
+    {
+        return gold != Other.gold || silver != Other.silver || bronze != Other.bronze;
+    }
 };
 
 bool cmp(const Country& a, const Country& b)
@@ -64,19 +69,31 @@ int main()
 
     sort(Countries.begin(), Countries.end(), cmp);
 
-    int ans = 1;
-    for (int i = 0; i < N; i++)
+    if (Countries[0].number == K)
     {
+        cout << 1;
+        return 0;
+    }
+
+    int ans = 1;
+    int increase = 1;
+    for (int i = 1; i < N; i++)
+    {
+        if (Countries[i - 1] == Countries[i])
+        {
+            increase++;
+        }
+        else
+        {
+            ans += increase;
+            increase = 1;
+        }
+
         if (Countries[i].number == K)
         {
             cout << ans;
             break;
         }
-
-        if (i == 0) continue;
-        if (Countries[i - 1] == Countries[i]) continue;
-
-        ans++;
     }
 
     return 0;
