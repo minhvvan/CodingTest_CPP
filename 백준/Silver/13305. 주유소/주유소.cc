@@ -15,7 +15,7 @@
 using namespace std;
 
 int N;
-const long long MAX = INT_MAX;
+const long long MAX = LLONG_MAX;
 
 int main()
 {
@@ -25,14 +25,11 @@ int main()
 
     cin >> N;
 
-    vector<int> dists(N - 1);
-    vector<int> costs(N);
+    vector<long long> dists(N - 1);
+    vector<long long> costs(N);
     for (int i = 0; i < N - 1; i++)
     {
-        int d;
-        cin >> d;
-        if (i == 0) dists[i] = d;
-        else dists[i] = dists[i - 1] + d;
+        cin >> dists[i];
     }
 
     for (int i = 0; i < N; i++)
@@ -40,23 +37,15 @@ int main()
         cin >> costs[i];
     }
 
-    vector<long long> dp(N, MAX);
-    dp[0] = 0;
-
-    for (int i = 1; i < N; i++)
+    long long ans = 0;
+    long long minCost = LLONG_MAX;
+    for (int i = 0; i < N-1; i++)
     {
-        for (int j = 0; j < i; j++)
-        {
-            int dist = dists[i - 1];
-            int minus = 0;
-            if(j != 0) minus = dists[j - 1];
-            dist -= minus;
-
-            dp[i] = min(dp[i], dp[j] + dist * costs[j]);
-        }
+        minCost = min(minCost, costs[i]);
+        ans += minCost * dists[i];
     }
 
-    cout << dp[N - 1];
+    cout << ans;
 
     return 0;
 }
