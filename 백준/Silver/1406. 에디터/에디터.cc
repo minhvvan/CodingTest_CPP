@@ -10,7 +10,6 @@
 #include <queue>
 #include <map>
 #include <unordered_map>
-#include <set>
 #include <list>
 #include <bitset>
 
@@ -67,16 +66,9 @@ int main()
         else if (oper == 'B')
         {
             if (cursor == editor.begin()) continue;
-            if (cursor == editor.end())
-            {
-                editor.pop_back();
-                cursor = editor.end();
-            }
-            else
-            {
-                auto copied = cursor;
-                editor.erase(--copied);
-            }
+
+            auto copied = cursor;
+            editor.erase(--copied);
         }
     }
 
