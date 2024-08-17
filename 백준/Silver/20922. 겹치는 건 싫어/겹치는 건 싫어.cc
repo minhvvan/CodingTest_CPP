@@ -27,7 +27,7 @@ int main()
     cin >> N >> K;
 
     deque<int> dq;
-    map<int, int> window;
+    vector<int> window(200'001, 0);
     int ans = 0;
 
     for (int i = 0; i < N; i++)
