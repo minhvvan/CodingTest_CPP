@@ -35,14 +35,6 @@ int main()
         int num;
         cin >> num;
 
-        if (window[num] < K)
-        {
-            dq.push_back(num);
-            window[num]++;
-            ans = max(ans, (int)dq.size());
-            continue;
-        }
-
         while (!dq.empty() && window[num] >= K)
         {
             int front = dq.front();
