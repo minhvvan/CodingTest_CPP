@@ -26,7 +26,7 @@ int main()
 
     cin >> N >> D;
 
-    vector<vector<pair<int, int>>> shortcuts(D);
+    vector<vector<pair<int, int>>> shortcuts(D+1);
 
     for (int i = 0; i < N; i++)
     {
@@ -36,29 +36,25 @@ int main()
         shortcuts[start].push_back({ end, cost });
     }
 
-    priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-    pq.push({ 0, 0 });
+    vector<int> distance(D+1);
+    for (int i = 0; i < D+1; i++) distance[i] = i;
+    vector<bool> visited(D+1, false);
 
-    while (!pq.empty())
+    for (int i = 0; i <= D; i++)
     {
-        auto [cost, current] = pq.top();
-        pq.pop();
-
-        if (current == D)
-        {
-            cout << cost;
-            break;
+        if (i != 0) 
+        { 
+            distance[i] = min(distance[i], distance[i - 1] + 1);
         }
 
-        if (current > D) continue;
-
-        for (auto [end, dist] : shortcuts[current])
+        for (auto [end, cost] : shortcuts[i])
         {
-            pq.push({ cost + dist, end });
+            if (end > D) continue;
+            distance[end] = min(distance[end], distance[i] + cost);
         }
-
-        pq.push({ cost + 1, current + 1 });
     }
+
+    cout << distance[D];
 
     return 0;
 }
