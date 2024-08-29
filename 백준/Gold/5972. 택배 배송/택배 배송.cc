@@ -33,12 +33,14 @@ int dijk()
         auto [dist, node] = pq.top();
         pq.pop();
 
+        if (result[node] < -dist) continue;
+
         for (auto [next, cost] : loads[node])
         {
             if (result[next] > result[node] + cost)
             {
                 result[next] = result[node] + cost;
-                pq.push({ -cost, next });
+                pq.push({ -result[node], next });
             }
         }
     }
