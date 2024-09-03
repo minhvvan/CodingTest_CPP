@@ -22,7 +22,7 @@ int ans = INT_MAX;
 
 void lightOn(int idx)
 {
-    if (idx > 0) current[idx - 1] = current[idx - 1] == '0' ? '1' : '0';
+     current[idx - 1] = current[idx - 1] == '0' ? '1' : '0';
     current[idx] = current[idx] == '0' ? '1' : '0';
     if (idx < N-1) current[idx + 1] = current[idx + 1] == '0' ? '1' : '0';
 }
