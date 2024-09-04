@@ -41,13 +41,8 @@ int main()
         if (visited[i]) continue;
         for (int j = i+1; j < N; j++)
         {
-            if (skyline[i].second <= skyline[j].second)
-            {
-                if(skyline[i].second == skyline[j].second) visited[j] = true;
-                continue;
-            }
-
-            break;
+            if (skyline[i].second > skyline[j].second) break;
+            if (skyline[i].second == skyline[j].second) visited[j] = true;
         }
 
         if(skyline[i].second != 0) ans++;
