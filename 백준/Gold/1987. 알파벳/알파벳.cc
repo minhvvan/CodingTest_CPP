@@ -23,7 +23,7 @@ vector<vector<char>> board;
 vector<int> dy = { -1, 0, 1, 0 };
 vector<int> dx = { 0, 1, 0, -1 };
 
-map<char, int> CntMap;
+vector<int> Cnt(26, 0);
 
 void dfs(int y, int x, int depth)
 {
@@ -34,11 +34,11 @@ void dfs(int y, int x, int depth)
         int newX = x + dx[i];
 
         if (newY < 0 || newY >= R || newX < 0 || newX >= C) continue;
-        if (CntMap[board[newY][newX]] > 0) continue;
+        if (Cnt[board[newY][newX] - 'A'] > 0) continue;
 
-        CntMap[board[newY][newX]]++;
+        Cnt[board[newY][newX] - 'A']++;
         dfs(newY, newX, depth + 1);
-        CntMap[board[newY][newX]]--;
+        Cnt[board[newY][newX] - 'A']--;
     }
 }
 
@@ -61,7 +61,7 @@ int main()
         }
     }
 
-    CntMap[board[0][0]] = 1;
+    Cnt[board[0][0]-'A'] = 1;
     dfs(0, 0, 1);
 
     cout << ans;
