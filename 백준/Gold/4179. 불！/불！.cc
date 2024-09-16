@@ -75,7 +75,7 @@ void bfs()
                 if (newY < 0 || newY >= R || newX < 0 || newX >= C)
                 {
                     ans = min(ans, level);
-                    continue;
+                    return;
                 }
                 if (maze[newY][newX] == 'F') continue;
                 if (maze[newY][newX] == '#') continue;
