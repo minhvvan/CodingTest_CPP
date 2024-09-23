@@ -19,7 +19,6 @@ using namespace std;
 
 int N, T;
 vector<long long> dp;
-vector<vector<int>> matchsticks;
 
 void makeMax(int num, vector<int>& nums)
 {
@@ -45,7 +44,7 @@ int main()
     cin >> T;
 
     dp.resize(101, LLONG_MAX);
-    int min_num[8] = { 0,0,1,7,4,2,0,8 };
+    int minNums[8] = { 9,9,1,7,4,2,0,8 };
 
     dp[1] = 9;
     dp[2] = 1;
@@ -60,7 +59,7 @@ int main()
     {
         for (int j = 2; j <= 7; ++j)
         {
-            dp[i] = min(dp[i], dp[i - j] * 10 + min_num[j]);
+            dp[i] = min(dp[i], dp[i - j] * 10 + minNums[j]);
         }
     }
 
