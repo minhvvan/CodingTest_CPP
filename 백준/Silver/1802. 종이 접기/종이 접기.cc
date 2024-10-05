@@ -1,52 +1,64 @@
-#include <iostream>
+#include <stdio.h>
+#include <cstring>
+#include <string>
 #include <vector>
 #include <algorithm>
-#include <deque>
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <climits>
+#include <queue>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
+#include <list>
+#include <bitset>
+
 using namespace std;
-int n;
-vector<string> answer;
-bool paper(string str, int s, int f);
-int main()
+
+int T;
+string paper;
+
+bool Check(int left, int right)
 {
-    cin >> n;
-    for (int i = 0; i < n; i++)
-    {
-        string str;
-        cin >> str;
-        if (str.length() == 1) //1이면 무조건 접을 수 있음.
-        {
-            cout << "YES" << endl;
-            continue;
-        }
-        //  cout<<str<<endl;
-        if (paper(str, 0, str.length()-1) == true)
-        {
-            cout << "YES" << endl;
-        }
-        else
-        {
-            cout << "NO" << endl;
-        }
-    }
-}
-bool paper(string str, int s, int f)
-{
-    if (s >= f)
+    if (left >= right)
     {
         return true;
     }
-    int left = s, right = f;
-    while (left < right)
+
+    int l = left, r = right;
+    while (l < r)
     {
-        if (str[left] != str[right])
+        if (paper[l] != paper[r])
         {
-            left++, right--;
+            l++, r--;
         }
         else
         {
             return false;
-            // break;
         }
     }
-    return paper(str, s, right- 1);
+
+    return Check(left, r - 1);
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cout.precision(4);
+
+    cin >> T;
+
+    while (T--)
+    {
+        cin >> paper;
+
+        if(Check(0, paper.length()-1)) cout << "YES\n";
+        else cout << "NO\n";
+    }
+
+    return 0;
 }
