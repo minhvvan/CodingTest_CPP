@@ -1,47 +1,86 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
-#define ll long long
+#include <stdio.h>
+#include <cstring>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <climits>
+#include <queue>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
+#include <list>
+#include <bitset>
+
 using namespace std;
 
-int main(void)
+int N;
+
+int main()
 {
-    ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
-    vector<ll> pos, neg;
-    int n, num;
-    int one_n, zero_n;
-    ll sum;
-    one_n = zero_n = sum = 0;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cout.precision(4);
 
-    cin>>n;
-    for(int i=0; i<n; i++)
+    cin >> N;
+
+    deque<long long> negativeNums;
+    deque<long long> positiveNums;
+    for (int i = 0; i < N; i++)
     {
-        cin>>num;
-        
-        if(num == 0) zero_n++;
-        else if(num == 1) one_n++;
-        else if(num < 0) neg.push_back(num);
-        else pos.push_back(num);
+        int num;
+        cin >> num;
+        if (num <= 0) negativeNums.push_back(num);
+        else positiveNums.push_back(num);
     }
 
-    sort(neg.begin(), neg.end());
-    sort(pos.begin(), pos.end(), greater<int>());
-    int pos_size = pos.size();
-    int neg_size = neg.size();
+    sort(negativeNums.begin(), negativeNums.end());
+    sort(positiveNums.begin(), positiveNums.end());
 
-    for(int i=0; i<neg_size - 1; i+=2)
+    long long ans = 0;
+    
+    while (!negativeNums.empty())
     {
-        sum += neg[i] * neg[i+1];
-    }
-    if(neg.size() % 2 == 1 && !zero_n) sum += neg.back();
+        long long a = negativeNums.front();
+        negativeNums.pop_front();
 
-    for(int i=0; i<pos_size - 1; i+=2)
+        if (!negativeNums.empty())
+        {
+            long long b = negativeNums.front();
+            negativeNums.pop_front();
+
+            a *= b;
+        }
+
+        ans += a;
+    }
+
+    while (!positiveNums.empty())
     {
-        sum += pos[i] * pos[i+1];
-    }
-    if(pos.size() % 2 == 1) sum += pos.back();
-    sum += one_n;
+        long long a = positiveNums.back();
+        positiveNums.pop_back();
 
-    cout<<sum;
+        if (a == 0) break;
+
+        if (!positiveNums.empty())
+        {
+            if (positiveNums.back() > 1)
+            {
+                long long b = positiveNums.back();
+                positiveNums.pop_back();
+
+                a *= b;
+            }
+        }
+
+        ans += a;
+    }
+
+    cout << ans;
+
     return 0;
 }
