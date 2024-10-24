@@ -20,9 +20,7 @@ int main() {
 
         for (int j = i; j <= rest / 2; j++)
         {
-            int a = min({ i, j, rest - j });
             int c = max({ i, j, rest - j });
-            int b = N - a - c;
 
             if (c < N - c)
             {
