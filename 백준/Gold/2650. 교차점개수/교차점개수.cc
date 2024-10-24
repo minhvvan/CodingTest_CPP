@@ -1,40 +1,42 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
+ 
+#define ft first
+#define sd second
+#define all(x) (x).begin(), (x).end()
 using namespace std;
-#define MUL 10000000
-int trans(int a,int b) {
-	if (a == 1) return b;
-	else if (a == 2) return MUL * 2 + MUL - b;
-	else if (a == 3) return MUL * 3 + MUL - b;
-	else if (a == 4) return MUL + b;
-}
+using pii = pair<int, int>;
+ 
+vector<pii> p;
+int n;
+int to[5] = {0, 0, 2, 3, 1};
+ 
 int main() {
-	int n;
-	cin >> n;
-
-	vector<pair<int, int>> v;
-	for (int i = 0; i < n/2; i++) {
-		int a,b,c,d;
-		cin >> a >> b >> c >> d;
-		int p1 = trans(a,b);
-		int p2 = trans(c,d);
-		if (p1 > p2) swap(p1, p2);
-		v.push_back({ p1, p2 });
-	}
-
-	int ans = 0, maxn = 0;
-	for (int i = 0; i < v.size(); i++) {
-		int temp = 0;
-		for (int j = 0; j < v.size(); j++) {
-			if (i == j) continue;
-			pair<int, int> line1 = v[i];
-			pair<int, int> line2 = v[j];
-			if (line1.first > line2.first) swap(line1, line2);
-			if (line1.first < line2.first && line2.first < line1.second && line1.second < line2.second) temp++;
-		}
-		maxn = max(maxn, temp);
-		ans += temp;
-	}
-	cout << ans/2 << '\n' << maxn;
+    cin >> n;
+    n /= 2;
+    for (int i = 0; i < n; i++) {
+        int a, b, c, d;
+        cin >> a >> b >> c >> d;
+        a = to[a];
+        c = to[c];
+        int x = a * 51 + b, y = c * 51 + d;
+        if (a > 1) x += 51 - 2 * b;
+        if (c > 1) y += 51 - 2 * d;
+ 
+        p.emplace_back(min(x, y), max(x, y));
+    }
+    int ans = 0;
+    int cross[55] = {0,};
+    for (int i = 0; i < n; i++) {
+        auto[a, b] = p[i];
+        for (int j = 0; j < n; j++) {
+            auto[c, d] = p[j];
+            if (a < c && c < b && b < d) {
+                ans++;
+                cross[i]++;
+                cross[j]++;
+            }
+        }
+    }
+    cout << ans << endl;
+    cout << *max_element(cross, cross + n);
 }
