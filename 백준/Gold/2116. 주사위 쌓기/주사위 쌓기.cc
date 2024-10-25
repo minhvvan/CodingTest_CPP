@@ -55,14 +55,17 @@ int main() {
         int current = 0;
         //i번 면이 아래로
         int top = dices[1][faced[i]];
-        current += GetMaxNum(dices[1][i], top);
+        int bottom = dices[1][i];
+        current += GetMaxNum(bottom, top);
 
         for (int j = 2; j <= N; j++)
         {
             int bottomIdx = GetIdx(dices[j], top);
-            top = dices[j][faced[bottomIdx]];
             
-            current += GetMaxNum(dices[j][bottomIdx], top);
+            top = dices[j][faced[bottomIdx]];
+            bottom = dices[j][bottomIdx];
+            
+            current += GetMaxNum(bottom, top);
         }
 
         ans = max(ans, current);
