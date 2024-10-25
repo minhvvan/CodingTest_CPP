@@ -8,10 +8,17 @@ vector<int> faced = { 0, 6, 4, 5, 2, 3, 1 };
 
 int GetMaxNum(int bottom, int top)
 {
-    set<int> temp = { 1,2,3,4,5,6 };
-    temp.erase(bottom);
-    temp.erase(top);
-    return *max_element(temp.begin(), temp.end());
+    vector<bool> temp(7, true);
+
+    temp[bottom] = false;
+    temp[top] = false;
+
+    for (int i = 6; i > 0; i--)
+    {
+        if (temp[i]) return i;
+    }
+
+    return -1;
 }
 
 int GetIdx(vector<int>& dice, int num)
