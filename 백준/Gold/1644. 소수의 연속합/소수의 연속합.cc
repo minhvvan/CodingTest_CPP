@@ -39,7 +39,7 @@ int main() {
     int left = 1;
     int right = 1;
 
-    while (left < prime.size() && right < prime.size())
+    while (right < prime.size())
     {
         int sum = sumStack[right] - sumStack[left - 1];
 
