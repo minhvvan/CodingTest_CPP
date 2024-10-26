@@ -3,8 +3,7 @@
 using namespace std;
 
 int N;
-vector<int> prime = {0};
-vector<int> sumStack = {0};
+vector<int> prime;
 
 int main() {
     ios_base::sync_with_stdio(0);
@@ -20,7 +19,7 @@ int main() {
     for (int i = 2; i <= N; i++)
     {
         bool bPrime = true;
-        for (int j = 2; j <= sqrt(i); j++)
+        for (int j = 2; j * j <= i; j++)
         {
             if (i % j == 0)
             {
@@ -32,24 +31,29 @@ int main() {
         if (bPrime)
         {
             prime.push_back(i);
-            sumStack.push_back(sumStack.back() + i);
         }
     }
 
-    int left = 1;
-    int right = 1;
+    int left = 0;
+    int right = 0;
 
-    while (right < prime.size())
+    int sum = 0;
+    while (right <= prime.size())
     {
-        int sum = sumStack[right] - sumStack[left - 1];
-
-        if (sum == N)
+        if (sum >= N) 
         {
-            ans++;
+            if (sum == N) ans++;
+            sum -= prime[left++];
+        }
+        else 
+        {
+            if (right < prime.size()) 
+            {
+                sum += prime[right];
+            }
+
             right++;
         }
-        else if (sum > N) left++;
-        else right++;
     }
 
     cout << ans;
