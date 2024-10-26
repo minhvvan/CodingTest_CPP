@@ -6,37 +6,6 @@ int N;
 
 vector<vector<int>> hits;
 
-void makePer(vector<vector<int>>& out, vector<int>& temp, vector<bool>& checked)
-{
-    if (temp.size() == 9)
-    {
-        out.push_back(temp);
-        return;
-    }
-
-    if (temp.size() == 3)
-    {
-        temp.push_back(0);
-        makePer(out, temp, checked);
-        temp.pop_back();
-    }
-    else
-    {
-        for (int i = 1; i < 9; i++)
-        {
-            if (checked[i]) continue;
-
-            temp.push_back(i);
-            checked[i] = true;
-
-            makePer(out, temp, checked);
-
-            temp.pop_back();
-            checked[i] = false;
-        }
-    }
-}
-
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
@@ -56,15 +25,13 @@ int main() {
         }
     }
 
-    vector<vector<int>> Per;
-    vector<int> temp;
-    vector<bool> checked(9, false);
-    
-    makePer(Per, temp, checked);
+    vector<int> per = { 0,1,2,3,4,5,6,7,8 };
 
     int ans = 0;
-    for (auto& order : Per)
+    do 
     {
+        if (per[3] != 0) continue;
+
         int score = 0;
         int idx = 0;
         for (int t = 0; t < N; t++)
@@ -73,7 +40,7 @@ int main() {
             vector<bool> base(4, false);
             while (out < 3)
             {
-                int hit = hits[t][order[idx]];
+                int hit = hits[t][per[idx]];
                 idx = (idx + 1) % 9;
                 if (hit == 0)
                 {
@@ -89,7 +56,7 @@ int main() {
                     int newIdx = i + hit;
                     if (newIdx > 3) score++;
                     else base[newIdx] = true;
-                    
+
                     base[i] = false;
                 }
 
@@ -100,7 +67,8 @@ int main() {
         }
 
         ans = max(ans, score);
-    }
+
+    } while (next_permutation(per.begin(), per.end()));
 
     cout << ans;
     
