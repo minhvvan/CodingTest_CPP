@@ -25,40 +25,38 @@ int main() {
         minStart = min(minStart, a);
         maxEnd = max(maxEnd, b);
 
-        for (int j = a; j < b; j++)
-        {
-            lines[j]++;
-        }
+        lines[a]++;
+        lines[b]--;
     }
 
     int left = 0;
     int right = 1;
 
-    vector<int> sums(maxEnd + 1, 0);
-    for (int i = left; i <= maxEnd; i++)
+    for (int i = 1; i <= maxEnd; i++)
     {
-        if (i == 0) sums[i] = lines[i];
-        else sums[i] = sums[i - 1] + lines[i];
+        lines[i] += lines[i - 1];
     }
 
     bool bPossible = false;
+    int length = lines[0];
     while (right <= maxEnd)
     {
-        int length;
-        if (left == 0) length = sums[right - 1];
-        else length = sums[right - 1] - sums[left - 1];
-
         if (length == K)
         {
-            bPossible = true;
-            break;
+            cout << left << " " << right;
+            return 0;
         }
-        else if (length < K) right++;
-        else left++;
+        else if (length < K)
+        {
+            length += lines[right++];
+        }
+        else
+        {
+            length -= lines[left++];
+        }
     }
 
-    if (bPossible) cout << left << " " << right;
-    else cout << "0 0";
+    cout << "0 0";
 
     return 0;
 }
