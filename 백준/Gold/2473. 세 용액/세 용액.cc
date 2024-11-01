@@ -13,7 +13,7 @@ int main() {
 
     cin >> N;
 
-    vector<int> solutions(N);
+    vector<long long> solutions(N);
 
     for (int i = 0; i < N; i++)
     {
@@ -25,19 +25,15 @@ int main() {
     long long minDiff = LLONG_MAX;
     vector<int> ans;
 
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < N-2; i++)
     {
-        long long sum = solutions[i];
-
-        int left = 0;
-        if (left == i) left++;
+        int left = i+1;
         int right = N-1;
-        if (right == i) right--;
 
-        sum += solutions[left];
-        sum += solutions[right];
-        while (left < right && right < N)
+        while (left < right)
         {
+            long long sum = solutions[i] + solutions[left] + solutions[right];
+
             if (abs(sum) < minDiff)
             {
                 minDiff = abs(sum);
@@ -46,19 +42,15 @@ int main() {
                 ans.push_back(solutions[left]);
                 ans.push_back(solutions[right]);
             }
+            
+            if (sum == 0) break;
             else if (sum > 0)
             {
-                sum -= solutions[right];
                 right--;
-                if (right == i) right--;
-                sum += solutions[right];
             }
             else
             {
-                sum -= solutions[left];
                 left++;
-                if (left == i) left++;
-                sum += solutions[left];
             }
         }
     }
