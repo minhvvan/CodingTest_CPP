@@ -1,89 +1,104 @@
 #include <string>
 #include <vector>
-#include <iostream>
-#include <algorithm>
+#include <bits/stdc++.h>
 
 using namespace std;
+int n;
+vector<vector<int>> dices;
 
-void Roll(int currentSum, vector<int>& rollSum, int depth, vector<int>& picks, vector<vector<int>>& dice)
+void makeComb(vector<vector<int>>& comb, vector<int> temp, int depth)
 {
-    if(depth == picks.size())
+    if(temp.size() == n/2)
     {
-        rollSum.push_back(currentSum);
+        comb.push_back(temp);
+        return;
+    }
+    
+    for(int i = depth; i < n; i++)
+    {
+        temp.push_back(i);
+        makeComb(comb, temp, i+1);
+        
+        temp.pop_back();
+    }
+}
+
+int convert(vector<int>& comb)
+{
+    int result = 0;
+    
+    for(int i = 0;i < comb.size(); i++)
+    {
+        result += (1 << comb[i]);
+    }
+    
+    return result;
+}
+
+//comb안에 모든 주사위의 점수 조합을 만들어야 함
+void makeScore(int result, int depth, vector<vector<int>>& scores, int combIdx, vector<int>& comb)
+{
+    if(depth == comb.size())
+    {
+        scores[combIdx].push_back(result);
         return;
     }
     
     for(int i = 0; i < 6; i++)
     {
-        currentSum += dice[picks[depth]][i];
-        Roll(currentSum, rollSum, depth+1, picks, dice);
-
-        currentSum -= dice[picks[depth]][i];
+        makeScore(result + dices[comb[depth]][i], depth + 1, scores, combIdx, comb);
     }
 }
 
 vector<int> solution(vector<vector<int>> dice) {
     vector<int> answer;
     
-    //완탐
-    //n개중 n/2개 고르기
-    vector<vector<int>> APicks;
-    vector<vector<int>> BPicks;
+    dices = dice;
+    n = dice.size();
     
+    //조합
+    vector<vector<int>> comb;
     vector<int> temp;
-    vector<vector<int>> roll;
+    makeComb(comb, temp, 0);
     
-    for(int i = 0; i < (1 << dice.size()); i++)
+    //각 조합에 대한 점수(모든 조합 = 10C5)
+    vector<vector<int>> scores(40'000);
+    for(int i = 0; i < comb.size(); i++)
     {
-        vector<int> AtempPick;
-        vector<int> BtempPick;
+        int combIdx = convert(comb[i]);
         
-        for(int j = 0; j < dice.size(); j++)
+        for(int j = 0; j < comb[i].size(); j++)
         {
-            if(i & (1 << j)) AtempPick.push_back(j);
-            else BtempPick.push_back(j);
-        }
-        
-        if(AtempPick.size() == BtempPick.size())
-        {
-            APicks.push_back(AtempPick);
-            BPicks.push_back(BtempPick);
+            makeScore(0, 0, scores, combIdx, comb[i]);
+            sort(scores[combIdx].begin(), scores[combIdx].end());
         }
     }
     
-    
+    const int maxIdx = (1 << n) - 1;
     int maxWin = 0;
-    vector<int> candidate;
-    
-    for(int i = 0; i < APicks.size(); i++)
+    int winCombIdx = -1;
+    for(int i = 0; i < comb.size(); i++)
     {
-        vector<int> ASums;
-        Roll(0, ASums, 0, APicks[i], dice);
+        int AIdx = convert(comb[i]);
+        int BIdx = maxIdx - AIdx;
         
-        vector<int> BSums;
-        Roll(0, BSums, 0, BPicks[i], dice);
-        
-        sort(ASums.begin(),ASums.end());
-        sort(BSums.begin(),BSums.end()); 
-        
-        int winRate = 0;
-        for(int n : ASums){
-            int win = lower_bound(BSums.begin(), BSums.end(), n) - BSums.begin(); 
-            if(win - 1 > 0) winRate += win; 
+        int current = 0;
+        for(int j = 0; j < scores[AIdx].size(); j++)
+        {
+            int win = lower_bound(scores[BIdx].begin(), scores[BIdx].end(), scores[AIdx][j]) - scores[BIdx].begin();
+            current += win;
         }
         
-        if(winRate > maxWin)
+        if(maxWin < current)
         {
-            maxWin = winRate;
-            candidate = APicks[i];
+            maxWin = current;
+            winCombIdx = AIdx;
         }
     }
     
-    
-    
-    for(int i = 0; i < candidate.size(); i++)
+    for(int i = 0; i < 10; i++)
     {
-        answer.push_back(candidate[i]+1);
+        if(winCombIdx & (1 << i)) answer.push_back(i+1);
     }
     
     return answer;
