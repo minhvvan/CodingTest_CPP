@@ -58,9 +58,16 @@ int main() {
     dragCosts.resize(N, vector<int>(N));
     dp.resize(N, vector<long long>(N, LLONG_MAX));
 
+    int minCost = INT_MAX;
+    int start = -1;
     for (int i = 0; i < N; i++)
     {
         cin >> digCosts[i];
+        if(digCosts[i] < minCost)
+        {
+            minCost = digCosts[i];
+            start = i;
+        }
     }
 
     for (int i = 0; i < N; i++)
@@ -73,10 +80,7 @@ int main() {
 
     //i번이 시작일 때
     long long ans = INT_MAX;
-    for (int i = 0; i < N; i++)
-    {
-        ans = min(ans, bfs(i, dp[i]));
-    }
+    ans = min(ans, bfs(start, dp[start]));
 
     cout << ans;
 
