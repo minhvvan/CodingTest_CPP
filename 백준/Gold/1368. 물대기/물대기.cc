@@ -5,7 +5,7 @@ using namespace std;
 int N;
 vector<int> digCosts;
 vector<vector<int>> dragCosts;
-vector<vector<long long>> dp;
+vector<long long> dp;
 
 long long bfs(int start, vector<long long>& costs)
 {
@@ -56,14 +56,14 @@ int main() {
     cin >> N;
     digCosts.resize(N);
     dragCosts.resize(N, vector<int>(N));
-    dp.resize(N, vector<long long>(N, LLONG_MAX));
+    dp.resize(N, LLONG_MAX);
 
     int minCost = INT_MAX;
     int start = -1;
     for (int i = 0; i < N; i++)
     {
         cin >> digCosts[i];
-        if(digCosts[i] < minCost)
+        if (digCosts[i] < minCost)
         {
             minCost = digCosts[i];
             start = i;
@@ -78,11 +78,7 @@ int main() {
         }
     }
 
-    //i번이 시작일 때
-    long long ans = INT_MAX;
-    ans = min(ans, bfs(start, dp[start]));
-
-    cout << ans;
+    cout << bfs(start, dp);
 
     return 0;
 }
