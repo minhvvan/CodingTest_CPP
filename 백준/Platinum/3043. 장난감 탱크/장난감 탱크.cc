@@ -68,8 +68,8 @@ int main() {
         if (rows[i].first > i) up.push_back(i);
         else if(rows[i].first < i) down.push_front(i);
 
-        if (cols[i].first > i) left.push_back(i);
-        else if (cols[i].first < i) right.push_front(i);
+        if (cols[i].first > i) left.push_front(i);
+        else if (cols[i].first < i) right.push_back(i);
     }
 
     vector<pair<int, char>> moves;
