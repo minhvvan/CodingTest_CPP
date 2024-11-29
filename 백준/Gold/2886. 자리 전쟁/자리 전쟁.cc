@@ -1,96 +1,106 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <algorithm>
-using namespace std;
-struct info {
-	int cidx, pidx, val;
-};
-struct cmp {
-	bool operator()(info &a, info &b) {
-		return a.val > b.val;
-	}
-};
-struct info2 {
-	int x, y;
-};
-info tmp;
-info2 tmp2;
-int row, col, result = 0;
-char arr[100][100];
-vector<info2> chair;
-vector<info2> people;
-int seated[10000];						//의자에 앉거나
-bool finished[10000] = { false, };      //people
-vector<int> v;
+#include <bits/stdc++.h>
 
-void cal() {
-	for (int i = 0; i < v.size(); i++) {
-		int cidx = v[i];
-		seated[cidx]++;
-		if (seated[cidx] == 2) result++;
-	}
+using namespace std;
+
+int N, M;
+vector<int> seatCnt;
+vector<bool> hasSeat;
+int ans = 0;
+
+struct Dist
+{
+    Dist() = default;
+    Dist(int d, int s, int p) : dist(d), seatIdx(s), peopleIdx(p) {};
+
+    int dist;
+    int seatIdx;
+    int peopleIdx;
+
+    bool operator < (const Dist& other) const
+    {
+        return dist < other.dist;
+    }
+};
+
+void Flush(vector<int>& temp)
+{
+    for (auto seat : temp)
+    {
+        seatCnt[seat]++;
+    }
+
+    temp.clear();
 }
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-	priority_queue<info, vector<info>, cmp> pq;
-	cin >> row >> col;
-	for (int i = 0; i < row; i++)
-		for (int j = 0; j < col; j++) {
-			char c;
-			cin >> c;
-			arr[i][j] = c;
-			if (c == 'L') {     //좌석
-				tmp2.x = j;
-				tmp2.y = i;
-				chair.push_back(tmp2);
-			}
-			else if (c == 'X') {
-				tmp2.x = j;
-				tmp2.y = i;
-				people.push_back(tmp2);
-			}
-		}
-	for (int i = 0; i < people.size(); i++) {
-		int px = people[i].x;
-		int py = people[i].y;
-		tmp.pidx = i;
-		for (int j = 0; j < chair.size(); j++) {
-			int cx = chair[j].x;
-			int cy = chair[j].y;
-			int dist = (cx - px)*(cx - px) + (cy - py)*(cy - py);
-			tmp.cidx = j;
-			tmp.val = dist;
-			pq.push(tmp);
-		}
-	}
-	int cidx = pq.top().cidx;
-	int pidx = pq.top().pidx;
-	int dist = pq.top().val;
-	v.push_back(cidx);
-	finished[pidx] = true;
-	pq.pop();
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cout << fixed;
+    cout.precision(4);
 
-	while (!pq.empty()) {
-		int nc = pq.top().cidx;
-		int np = pq.top().pidx;
-		int nd = pq.top().val;
-		pq.pop();
-		if (dist != nd) {		//거리가 다르다면
-			dist = nd;
-			if (!v.empty()) {
-				cal();
-				v.clear();
-			}
-		}
-		if (seated[nc] == 0 && !finished[np]) {		//해당 의자가 비었고, 이미 다른 의자에 앉은 사람이 아니라면
-			v.push_back(nc);
-			finished[np] = true;
-		}			
-	}
-	if(!v.empty())
-		cal();
-	cout << result;
-	return 0;
+    cin >> N >> M;
+
+    vector<pair<int, int>> seats;
+    vector<pair<int, int>> people;
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < M; j++)
+        {
+            char current;
+            cin >> current;
+            if (current == 'L') seats.push_back({ i,j });
+            if (current == 'X') people.push_back({ i,j });
+        }
+    }
+
+    vector<Dist> dists;
+
+    //make Dist
+    for (int i = 0; i < seats.size(); i++)
+    {
+        auto [seatY, seatX] = seats[i];
+
+        for (int j = 0; j < people.size(); j++)
+        {
+            auto [personY, personX] = people[j];
+
+            int d = (seatY - personY) * (seatY - personY) + (seatX - personX) * (seatX - personX);
+            dists.push_back({ d, i, j });
+        }
+    }
+
+    sort(dists.begin(), dists.end());
+
+    hasSeat.resize(people.size(), false);
+    seatCnt.resize(seats.size(), 0);
+
+    vector<int> temp;
+    int previousDistance = -1;
+
+    for(auto [dist, seatIdx, peopleIdx] : dists)
+    {
+        if (previousDistance < dist)
+        {
+            previousDistance = dist;
+            Flush(temp);
+        }
+
+        if (hasSeat[peopleIdx] || seatCnt[seatIdx]) continue;
+
+        hasSeat[peopleIdx] = true;
+        temp.push_back(seatIdx);
+    }
+
+    if (!temp.empty()) Flush(temp);
+
+    for (int cnt : seatCnt)
+    {
+        if (cnt >= 2) ans++;
+    }
+
+    cout << ans;
+
+    return 0;
 }
