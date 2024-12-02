@@ -29,8 +29,8 @@ void bfs(vector<vector<int>>& rooms)
             if (newY < 0 || newY >= N || newX < 0 || newX >= N) continue;
             if (newY == N - 1 && newX == N - 1)
             {
-                ans = min(ans, cost);
-                continue;
+                ans = cost;
+                return;
             }
             if (visited[newY][newX] <= cost) continue;
 
