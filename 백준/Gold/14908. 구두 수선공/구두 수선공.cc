@@ -13,7 +13,7 @@ struct Task
     bool operator < (const Task& Other) const
     {
         if (cost == Other.cost) return num < Other.num;
-        return cost < Other.cost;
+        return cost > Other.cost;
     }
 };
 
@@ -34,7 +34,7 @@ int main() {
     {
         double t, s;
         cin >> t >> s;
-        tasks.push_back({ i, t/s });
+        tasks.push_back({ i, s/t });
     }
 
     sort(tasks.begin(), tasks.end());
