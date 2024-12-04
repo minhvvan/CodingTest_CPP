@@ -1,77 +1,123 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
+
 using namespace std;
-typedef long long ll;
-typedef pair<ll,ll> pi;
-const ll mod = 1e9+9;
-const ll INF = INT64_MAX/100;
-int n,m,x,y;
-vector<pi>graph[100005];
-ll dist[100005];
-ll DIST[100005];
-void dijkstra(int start){
-	for(int i=1; i<=n; i++) dist[i] = INF;
-	dist[start] = 0;
-	priority_queue<pi,vector<pi>,greater<pi> >pq;
-	pq.push(pi(dist[start],start));
-	while(!pq.empty()){
-		ll d = pq.top().first;
-		int cur = pq.top().second;
-		pq.pop();
-		if(d>dist[cur]) continue;
-		for(pi p : graph[cur]){
-			int nxt = p.first;
-			ll w = p.second;
-			if(dist[nxt]>d+w){
-				dist[nxt] = d+w;
-				pq.push(pi(dist[nxt],nxt));
-			}
-		}
-	}
-}
-void DIJKSTRA(int start){
-	DIST[start] = 1;
-	queue<int>q; q.push(start);
-	while(!q.empty()){
-		int cur = q.front();
-		q.pop();
-		for(pi p : graph[cur]){
-			int nxt = p.first;
-			ll w = p.second;
-			if(dist[nxt]!=dist[cur]+w) continue;
-			if(!DIST[nxt]){
-				DIST[nxt] = DIST[cur]+1;
-				q.push(nxt);
-			}
-		}
-	}
-}
-ll dp[100005];
-ll f(int cur){
-	ll&ret = dp[cur];
-	if(~ret) return ret;
-	ret = 0;
-     for (pi p : graph[cur]) {
-        int nxt = p.first;
-        int w = p.second;
-        if (dist[nxt]==dist[cur]+w &&DIST[nxt] == DIST[cur] + 1) ret += f(nxt);
+
+int N, M, x, y;
+vector<vector<pair<int, int>>> edges;
+vector<long long> dists;
+vector<long long> moveCnt;
+const int DIV = 1'000'000'009;
+const long long INF = 600'000'000'001;
+
+void Dijk()
+{
+    vector<bool> visited(N + 1, false);
+    priority_queue<tuple<long long, int>> pq;
+    pq.push({ 0, x });
+    dists[x] = 0;
+
+    while (!pq.empty())
+    {
+        auto [dist, current] = pq.top();
+        pq.pop();
+
+        dist *= -1;
+        if (dist > dists[current]) continue;
+
+        for (auto [next, cost] : edges[current])
+        {
+            if (dists[next] <= dist + cost) continue;
+
+            dists[next] = dists[current] + cost;
+            pq.push({ -dists[next], next});
+        }
     }
-	return ret%=mod;
 }
-int main(){
-	ios_base::sync_with_stdio(false); cin.tie(NULL);
-	cin>>n>>m>>x>>y;
-	while(m--){
-		int a,b,w; cin>>a>>b>>w;
-		graph[a].emplace_back(pi(b,w));
-	}
-	dijkstra(x);
-	if(dist[y]==INF) cout<<-1;
-	else{
-		cout<<dist[y]<<'\n';
-		DIJKSTRA(x);
-		cout<<DIST[y]-1	<<'\n';
-		memset(dp,-1,sizeof(dp));
-		dp[y] = 1;
-		cout<<f(x);
-	}
+
+void findMoveCnt()
+{
+    queue<int>q; 
+    q.push(x);
+
+    while (!q.empty()) 
+    {
+        int cur = q.front();
+        q.pop();
+
+        for (auto [next, cost] : edges[cur]) 
+        {
+            if (dists[next] != dists[cur] + cost) continue;
+            if (!moveCnt[next])
+            {
+                moveCnt[next] = moveCnt[cur] + 1;
+                q.push(next);
+            }
+        }
+    }
+}
+
+//long long findPath(int current)
+//{
+//    if (current == y) return 1;
+//
+//    long long result = 0;
+//    for (auto [next, cost] : edges[current])
+//    {
+//        if (moveCnt[next] == moveCnt[current] + 1 && dists[next] == dists[current] + cost)
+//        {
+//            result += findPath(next);
+//            result %= DIV;
+//        }
+//    }
+//
+//    return result;
+//}
+
+long long dp[100005];
+long long f(int cur) {
+    long long& ret = dp[cur];
+    if (~ret) return ret;
+    ret = 0;
+    for (auto [nxt, cost] : edges[cur]) {
+        if (moveCnt[nxt] == moveCnt[cur] + 1 && dists[nxt] == dists[cur]+cost) ret += f(nxt);
+    }
+
+    return ret %= DIV;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cout << fixed;
+    cout.precision(4);
+
+    cin >> N >> M >> x >> y;
+
+    edges.resize(N + 1);
+    dists.resize(N + 1, INF);
+    moveCnt.resize(N + 1, 0);
+
+    for (int i = 0; i < M; i++)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+
+        edges[u].push_back({ v,w });
+    }
+
+    Dijk();
+
+    if (dists[y] == INF)
+    {
+        cout << -1;
+        return 0;
+    }
+
+    findMoveCnt();
+    memset(dp, -1, sizeof(dp));
+    dp[y] = 1;
+    cout << dists[y] << "\n" << moveCnt[y] << "\n" << f(x);
+
+    return 0;
 }
