@@ -28,6 +28,7 @@ void Dijk()
         {
             if (dists[next] <= dist + cost) continue;
 
+            moveCnt[next] = moveCnt[current] + 1;
             dists[next] = dists[current] + cost;
             pq.push({ -dists[next], next});
         }
@@ -49,7 +50,6 @@ void findMoveCnt()
             if (dists[next] != dists[cur] + cost) continue;
             if (!moveCnt[next])
             {
-                moveCnt[next] = moveCnt[cur] + 1;
                 q.push(next);
             }
         }
@@ -114,7 +114,7 @@ int main() {
         return 0;
     }
 
-    findMoveCnt();
+    //findMoveCnt();
     memset(dp, -1, sizeof(dp));
     dp[y] = 1;
     cout << dists[y] << "\n" << moveCnt[y] << "\n" << f(x);
