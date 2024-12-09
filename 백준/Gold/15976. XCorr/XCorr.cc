@@ -3,8 +3,11 @@
 using namespace std;
 
 int N, M;
-vector<pair<int, int>> X;
-vector<pair<int, int>> Y;
+vector<int> XIdx;
+vector<int> X;
+vector<int> YIdx;
+vector<int> Y;
+vector<long long> sums;
 
 int main() {
     ios_base::sync_with_stdio(0);
@@ -19,7 +22,8 @@ int main() {
     {
         int a, b;
         cin >> a >> b;
-        X.push_back({ a,b });
+        XIdx.push_back(a);
+        X.push_back(b);
     }
 
     cin >> M;
@@ -28,40 +32,26 @@ int main() {
     {
         int a, b;
         cin >> a >> b;
-        Y.push_back({ a,b });
+        YIdx.push_back(a);
+        Y.push_back(b);
     }
 
     int a, b;
     cin >> a >> b;
 
-    long long ans = 0;
-    set<int> checked;
-
-    for (int i = 0; i < N; i++)
+    sums.push_back(0);
+    for (int i = 0; i < M; i++) 
     {
-        for (int j = 0; j < M; j++)
-        {
-            int shift = Y[j].first - X[i].first;
-            if (a > shift || b < shift) continue;
-            if (checked.count(shift)) continue;
-            checked.insert(shift);
+        sums.push_back(sums[i] + Y[i]);
+    }
 
-            int xIdx = 0;
-            int yIdx = 0;
+    long long ans = 0;
 
-            while (xIdx < N && yIdx < M)
-            {
-                int x = X[xIdx].first;
-                int y = Y[yIdx].first;
-
-                if (shift < 0) x += shift;
-                else y -= shift;
-
-                if (x == y) ans += X[xIdx++].second * Y[yIdx++].second;
-                else if (x < y) xIdx++;
-                else yIdx++;
-            }
-        }
+    for (int i = 0; i < N; i++) 
+    {
+        int s = lower_bound(YIdx.begin(), YIdx.end(), XIdx[i] + a) - YIdx.begin();
+        int e = upper_bound(YIdx.begin(), YIdx.end(), XIdx[i] + b) - YIdx.begin();
+        ans += X[i] * (sums[e] - sums[s]);
     }
 
     cout << ans;
