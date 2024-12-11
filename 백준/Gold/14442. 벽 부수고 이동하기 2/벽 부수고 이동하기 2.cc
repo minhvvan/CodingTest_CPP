@@ -20,9 +20,6 @@ int BFS()
         auto [y, x, cost, k] = q.front();
         q.pop();
 
-        if (visited[y][x][k]) continue;
-        visited[y][x][k] = true;
-
         if (y == N && x == M) return cost;
 
         for (int i = 0; i < 4; i++)
@@ -35,10 +32,15 @@ int BFS()
             if (board[newY][newX] == 1)
             {
                 if (k == 0) continue;
+                if (visited[newY][newX][k+1]) continue;
+                visited[newY][newX][k + 1] = true;
+
                 q.push({ newY, newX, cost + 1, k - 1 });
             }
             else
             {
+                if (visited[newY][newX][k]) continue;
+                visited[newY][newX][k] = true;
                 q.push({ newY, newX, cost + 1, k });
             }
         }
