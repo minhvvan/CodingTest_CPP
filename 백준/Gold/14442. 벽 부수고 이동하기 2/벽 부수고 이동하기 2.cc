@@ -3,24 +3,28 @@
 using namespace std;
 
 int N, M, K;
-vector<vector<int>> board;
+vector<string> board;
 
 vector<int> dy = { -1, 0, 1, 0 };
 vector<int> dx = { 0, 1, 0, -1 };
 
 int BFS()
 {
-    vector<vector<vector<bool>>> visited(N + 1, vector<vector<bool>>(M + 1, vector<bool>(11, false)));
+    vector<vector<vector<int>>> visited(N + 1, vector<vector<int>>(M + 1, vector<int>(11, -1)));
 
-    queue<tuple<int, int, int, int>> q;
-    q.push({ 1,1,1,K });
+    queue<tuple<int, int, int>> q;
+    q.push({ 1,1,0 });
+    visited[1][1][0] = 1;
 
     while (!q.empty())
     {
-        auto [y, x, cost, k] = q.front();
+        auto [y, x, k] = q.front();
         q.pop();
 
-        if (y == N && x == M) return cost;
+        if (y == N && x == M)
+        {
+            return visited[y][x][k];
+        }
 
         for (int i = 0; i < 4; i++)
         {
@@ -29,19 +33,20 @@ int BFS()
 
             if (newY < 1 || newY > N || newX < 1 || newX > M) continue;
 
-            if (board[newY][newX] == 1)
+            if (board[newY][newX] == '1')
             {
-                if (k == 0) continue;
-                if (visited[newY][newX][k+1]) continue;
-                visited[newY][newX][k + 1] = true;
+                if (k == K) continue;
+                if (visited[newY][newX][k+1] != -1) continue;
+                visited[newY][newX][k + 1] = visited[y][x][k] + 1;
 
-                q.push({ newY, newX, cost + 1, k - 1 });
+                q.push({ newY, newX, k + 1 });
             }
             else
             {
-                if (visited[newY][newX][k]) continue;
-                visited[newY][newX][k] = true;
-                q.push({ newY, newX, cost + 1, k });
+                if (visited[newY][newX][k] != -1) continue;
+                visited[newY][newX][k] = visited[y][x][k] + 1;
+
+                q.push({ newY, newX, k });
             }
         }
     }
@@ -58,15 +63,12 @@ int main() {
 
     cin >> N >> M >> K;
 
-    board.resize(N + 1, vector<int>(M + 1));
+    board.resize(N + 1);
     for (int i = 1; i <= N; i++)
     {
         string str;
         cin >> str;
-        for (int j = 1; j <= M; j++)
-        {
-            board[i][j] = str[j-1] - '0';
-        }
+        board[i] = "0" + str;
     }
 
     cout << BFS();
