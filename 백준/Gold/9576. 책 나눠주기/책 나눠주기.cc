@@ -2,39 +2,60 @@
 
 using namespace std;
 
-bool cmp(const pair<int,int>& p, const pair<int,int>& q)
+int T, N, M;
+
+bool cmp(const pair<int, int>& a, const pair<int, int>& b)
 {
-	if(p.second != q.second)
-		return p.second < q.second;
-	return p.first < q.first;
+    if (a.second == b.second) return a.first < b.first;
+    return a.second < b.second;
 }
 
-int main()
-{
-	int T;
-	scanf("%d",&T);
-	while(T--)
-	{
-		int N, M;
-		scanf("%d%d",&N,&M);
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    cout << fixed;
+    cout.precision(4);
 
-		vector< pair<int, int> > a(M);
-		for(int i=0; i < M; i++)
-			scanf("%d%d",&a[i].first, &a[i].second);
+    cin >> T;
 
-		sort(a.begin(), a.end(), cmp);
+    while (T--)
+    {
+        cin >> N >> M;
 
-		int ans = 0;
-		bool b[1001] = {};
-		for(int i=0; i < M; i++)
-			for(int j=a[i].first; j <= a[i].second; j++)
-				if(b[j] == false)
-				{
-					ans++;
-					b[j] = true;
-					break;
-				}
-		printf("%d\n",ans);
-	}
-	return 0;
+        if (N == 1)
+        {
+            cout << 1 << "\n";
+            continue;
+        }
+
+        vector<pair<int, int>> students;
+        for (int i = 0; i < M; i++)
+        {
+            int a, b;
+            cin >> a >> b;
+            students.push_back({ a,b });
+        }
+
+        sort(students.begin(), students.end(), cmp);
+
+        vector<bool> checked(N + 1, false);
+        int ans = 0;
+        for (int i = 0; i < M; i++)
+        {
+            for (int j = students[i].first; j <= students[i].second; j++)
+            {
+                if (!checked[j])
+                {
+                    ans++;
+                    checked[j] = true;
+                    break;
+                }
+            }
+        }
+
+        cout << ans << "\n";
+    }
+
+    return 0;
 }
