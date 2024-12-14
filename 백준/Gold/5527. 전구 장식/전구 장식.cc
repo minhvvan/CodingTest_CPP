@@ -20,28 +20,26 @@ int main() {
         cin >> lights[i];
     }
 
-    deque<vector<int>> groups;
-    vector<int> temp;
-    temp.push_back(N-1);
+    vector<int> groups;
+    int cnt = 1;
     for (int i = N - 2; i >= 0; i--)
     {
-        if (lights[i] != lights[i + 1]) temp.push_back(i);
+        if (lights[i] != lights[i + 1]) cnt++;
         else
         {
-            groups.push_back(temp);
-            temp.clear();
-            temp.push_back(i);
+            groups.push_back(cnt);
+            cnt = 1;
         }
     }
 
-    groups.push_back(temp);
+    if(cnt != 0) groups.push_back(cnt);
 
     int ans = 0;
     for (int i = 0; i < groups.size(); i++)
     {
-        int cnt = groups[i].size();
-        if (i != 0) cnt += groups[i - 1].size();
-        if (i != groups.size()-1) cnt += groups[i + 1].size();
+        int cnt = groups[i];
+        if (i != 0) cnt += groups[i - 1];
+        if (i != groups.size()-1) cnt += groups[i + 1];
 
         ans = max(ans, cnt);
     }
