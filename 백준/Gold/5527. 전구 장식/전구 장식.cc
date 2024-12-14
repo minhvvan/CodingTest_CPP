@@ -22,9 +22,9 @@ int main() {
 
     vector<int> groups;
     int cnt = 1;
-    for (int i = N - 2; i >= 0; i--)
+    for (int i = 1; i < N; i++)
     {
-        if (lights[i] != lights[i + 1]) cnt++;
+        if (lights[i] != lights[i - 1]) cnt++;
         else
         {
             groups.push_back(cnt);
