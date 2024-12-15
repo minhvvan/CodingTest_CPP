@@ -13,9 +13,6 @@ vector<int> dx = { 0, 0, -1, 1 };
 
 void dfs(int y, int x, int depth)
 {
-    if (depth <= dp[y][x]) return;
-    dp[y][x] = depth;
-
     for (int i = 0; i < 4; i++)
     {
         int newY = y + dy[i] * board[y][x];
@@ -37,6 +34,9 @@ void dfs(int y, int x, int depth)
             exit(0);
         }
 
+        if (depth + 1 <= dp[newY][newX]) continue;
+        dp[newY][newX] = depth + 1;
+
         visited[newY][newX] = true;
         dfs(newY, newX, depth+1);
         visited[newY][newX] = false;
@@ -55,6 +55,7 @@ int main() {
     board.resize(N);
     visited.resize(N, vector<bool>(M, false));
     dp.resize(N, vector<int>(M, -1));
+    dp[0][0] = 0;
     for (int i = 0; i < N; i++)
     {
         string str;
