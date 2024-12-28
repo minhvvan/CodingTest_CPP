@@ -4,6 +4,24 @@ using namespace std;
 
 int N, S = 0;
 vector<int> weights;
+vector<bool> possible;
+
+void DFS(int idx, int total)
+{
+    possible[total] = true;
+
+    if (idx == N)
+    {
+        return;
+    }
+
+    int current = weights[idx];
+    possible[current] = true;
+
+    DFS(idx + 1, total);
+    DFS(idx + 1, total+current);
+    DFS(idx + 1, abs(total - current));
+}
 
 int main() {
     ios_base::sync_with_stdio(0);
@@ -21,29 +39,17 @@ int main() {
         S += weights[i];
     }
 
-    //그릇은 항상 왼쪽에 있다
-    //오른쪽 추 - 왼쪽추 = 물
+    possible.resize(S+1, false);
 
-    set<int> possibleSet;
-    for (int i = 0; i < N; i++)
+    DFS(0, 0);
+
+    int ans = 0;
+    for (int i = 1; i <= S; i++)
     {
-        int currentWeight = weights[i];
-        set<int> temp;
-        for (auto comb : possibleSet)
-        {
-            if(abs(currentWeight - comb) != 0) temp.insert(abs(currentWeight - comb));
-            temp.insert(currentWeight + comb);
-        }
-
-        for (auto num : temp)
-        {
-            possibleSet.insert(num);
-        }
-
-        possibleSet.insert(currentWeight);
+        if (!possible[i]) ans++;
     }
 
-    cout << S - possibleSet.size();
+    cout << ans;
 
     return 0;
 }
