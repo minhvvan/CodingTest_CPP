@@ -3,40 +3,7 @@
 using namespace std;
 
 string num;
-
-int ans = 0;
-
-void DFS(int idx)
-{
-    if (idx == num.length())
-    {
-        ans++;
-        return;
-    }
-
-    //1자리
-    {
-        int n = num[idx] - '0';
-        if (n != 0)
-        {
-            DFS(idx + 1);
-        }
-    }
-
-    //2자리
-    {
-        if (idx + 1 >= num.length()) return;
-
-        int n = num[idx] - '0';
-        n *= 10;
-        n += num[idx + 1] - '0';
-
-        if (10 <= n && n <= 34)
-        {
-            DFS(idx + 2);
-        }
-    }
-}
+vector<int> dp;
 
 int main() {
     ios_base::sync_with_stdio(0);
@@ -45,9 +12,22 @@ int main() {
     cout << fixed;
 
     cin >> num;
-    DFS(0);
+    dp.resize(num.length());
 
-    cout << ans;
+    dp[0] = 1;
+    for (int i = 1; i < num.length(); i++)
+    {
+        if (i > 0 && num[i] != '0') dp[i] += dp[i - 1];
+
+        int n = stoi(num.substr(i-1, 2));
+
+        if (10 <= n && n <= 34) 
+        {
+            dp[i] += i - 2 >= 0 ? dp[i - 2] : 1;
+        }
+    }
+
+    cout << dp[num.length() - 1];
 
     return 0;
 }
