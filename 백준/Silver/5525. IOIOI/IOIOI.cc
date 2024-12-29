@@ -15,27 +15,29 @@ int main() {
 
     cin >> N >> M >> S;
 
-    for (int i = 0; i < 2 * N + 1; i++)
-    {
-        if (i % 2 == 0) P += 'I';
-        else P += 'O';
-    }
-
-    string current;
-    for (int i = 0; i < 2 * N + 1; i++)
-    {
-        current += S[i];
-    }
-
     int ans = 0;
-    if (current == P) ans++;
-
-    for (int i = 2 * N + 1; i < M; i++)
+    for (int i = 0; i < M; i++)
     {
-        current = current.substr(1, current.length());
-        current += S[i];
+        int k = 0;
 
-        if (current == P) ans++;
+        if (S[i] == 'O')
+        {
+            continue;
+        }
+        else
+        {
+            while (S[i + 1] == 'O' && S[i + 2] == 'I')
+            {
+                k++;
+                if (k == N)
+                {
+                    k--;
+                    ans++;
+                }
+
+                i += 2;
+            }
+        }
     }
 
     cout << ans;
