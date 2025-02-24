@@ -1,53 +1,72 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-using pii=pair<long, long>;
 
-#define MAX 1000001
-#define INF 9999999999
+int N, M;
+vector<int> visible;
+vector<vector<pair<int, int>>> roads;
+vector<long long> dist;
+const long long MAX = 10000000001;
+int ans = MAX;
 
-vector<pii> vec[MAX];
-vector<long> dist(MAX, INF);
-long sight[MAX];
+void Dijk()
+{
+	dist[0] = 0;
 
-long dijkstra(long s, long e){
-    priority_queue<pii> pq; pq.push({0, s});
-    dist[s]=0;
-    
-    while(!pq.empty()){
-        pii t=pq.top(); pq.pop();
-        long c=t.second; long d=t.first*-1;
-        
-        if(dist[c]<d)continue;
-        for(int i=0; i<vec[c].size(); i++){
-            long nxt=vec[c][i].first;
-            long nxt_d=vec[c][i].second+d;
-            if(sight[nxt] == 1 && nxt!=e-1) continue;
-            if(nxt_d<dist[nxt]){
-                dist[nxt]=nxt_d;
-                pq.push({nxt_d*-1, nxt});
-            }
-        }
-    }
-    
-    return dist[e-1];
-    
+	priority_queue<pair<long long, int>> q;
+	q.push({ 0, 0 });
+
+	while (!q.empty())
+	{
+		auto [d, current] = q.top();
+		q.pop();
+
+		d *= -1;
+		if (dist[current] < d) continue;
+
+		for (auto [next, cost] : roads[current])
+		{
+			if (next != N - 1 && visible[next] == 1) continue;
+
+			if (dist[next] > dist[current] + cost)
+			{
+				dist[next] = dist[current] + cost;
+				q.push({ -dist[next], next });
+			}
+		}
+	}
 }
-int main(){
-    
-    long N, M; cin>>N>>M;
-    for(int i=0; i<N; i++) cin>>sight[i];
-    
-    while(M--){
-        long a, b, t; cin>>a>>b>>t;
-        vec[a].push_back({b, t});
-        vec[b].push_back({a, t});
-    }
-    
-    long ans=dijkstra(0, N);
-    
-    if(ans>=INF) cout<<-1;
-    else cout<<ans;
 
-    return 0;
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	cout << fixed;
+
+	cin >> N >> M;
+
+	visible.resize(N, 0);
+	roads.resize(N, vector<pair<int, int>>());
+	dist.resize(N, MAX);
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> visible[i];
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		int a, b, t;
+		cin >> a >> b >> t;
+		roads[a].push_back({ b,t });
+		roads[b].push_back({ a,t });
+	}
+
+	Dijk();
+
+	if (dist[N - 1] == MAX) cout << -1;
+	else cout << dist[N - 1];
+	
+	return 0;
 }
