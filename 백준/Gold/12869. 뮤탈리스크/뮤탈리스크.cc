@@ -16,18 +16,19 @@ vector <vector<int>> v =
 
 int solution(int x, int y, int z)
 {
-	if (x == 0 && y == 0 && z == 0)return 0;
-	else if (x < 0)return solution(0, y, z);
-	else if (y < 0)return solution(x, 0, z);
-	else if (z < 0)return solution(x, y, 0);
+	if (x == 0 && y == 0 && z == 0) return 0;
 
 	int& res = dp[x][y][z];
-	if (res != -1)return res;
+	if (res != -1) return res;
 	res = INT_MAX;
 
 	for (int i = 0; i < 6; i++) 
 	{
-		res = min(res, solution(x - v[i][0], y - v[i][1], z - v[i][2]) + 1);
+		int newX = max(0, x - v[i][0]);
+		int newY = max(0, y - v[i][1]);
+		int newZ = max(0, z - v[i][2]);
+
+		res = min(res, solution(newX, newY, newZ) + 1);
 	}
 
 	return res;
