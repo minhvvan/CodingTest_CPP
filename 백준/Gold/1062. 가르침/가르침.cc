@@ -5,26 +5,28 @@ using namespace std;
 
 using namespace std;
 int N, K;
-vector<string> words;
-vector<bool> learned;
+vector<bitset<26>> words;
+bitset<26> learned;
 int ans = 0;
+
+bitset<26> Convert(string str)
+{
+    bitset<26> result;
+
+    for (auto c : str)
+    {
+        result[c - 'a'] = 1;
+    }
+
+    return result;
+}
 
 int CanRead()
 {
     int cnt = 0;
     for (auto& word : words)
     {
-        bool bPossible = true;
-        for (int i = 0; i < word.length(); i++)
-        {
-            if (learned[word[i] - 'a'] == false)
-            {
-                bPossible = false;
-                break;
-            }
-        }
-
-        if (bPossible) cnt++;
+        if ((word & learned).count() == word.count()) cnt++;
     }
 
     return cnt;
@@ -59,12 +61,11 @@ int main()
         return 0;
     }
     
-    words.resize(N);
-    learned.resize(26, false);
-
     for (int i = 0; i < N; i++)
     {
-        cin >> words[i];
+        string str;
+        cin >> str;
+        words.push_back(Convert(str));
     }
 
     learned['a' - 'a'] = true;
@@ -73,9 +74,7 @@ int main()
     learned['c' - 'a'] = true;
     learned['n' - 'a'] = true;
 
-    K -= 5;
-
-    Dfs(0, 0);
+    Dfs(0, 5);
 
     cout << ans;
 
