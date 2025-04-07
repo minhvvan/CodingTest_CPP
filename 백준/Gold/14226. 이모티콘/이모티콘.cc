@@ -39,7 +39,7 @@ int main()
 		}
 
 		//붙여넣기
-		if (screen + clip <= 3000)
+		if (screen + clip <= N)
 		{
 			q.push({ screen + clip, clip, time + 1 });
 		}
