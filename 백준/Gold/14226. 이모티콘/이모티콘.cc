@@ -5,8 +5,7 @@ using namespace std;
 
 using namespace std;
 int N;
-const int MAX = 1002;
-int ans = INT_MAX;
+const int MAX = 1001;
 vector<int> visited(MAX, INT_MAX);
 
 int main() 
@@ -15,7 +14,7 @@ int main()
 
     cin >> N;
 
-	vector<bool> visit(3001, false);
+	vector<bool> visit(MAX, false);
 
 	queue<tuple<int, int, int>> q;
 	q.push({ 1,0, 0 });
