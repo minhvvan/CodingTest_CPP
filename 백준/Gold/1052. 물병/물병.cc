@@ -22,7 +22,7 @@ int main()
 
 		while (1) 
 		{
-			bitset<100> num(n);
+			bitset<30> num(n);
 			if (num.count() <= k) break;
 
 			n++;
