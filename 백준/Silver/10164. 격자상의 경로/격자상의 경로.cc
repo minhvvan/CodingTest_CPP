@@ -18,6 +18,11 @@ int main()
 
     int y = K / M + 1;
     int x = K % M;
+    if (K % M == 0)
+    {
+        y--;
+        x = M;
+    }
 
     if (K == 0)
     {
