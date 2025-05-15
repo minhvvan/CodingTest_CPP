@@ -10,8 +10,8 @@ struct Task
 {
     int duration;
     int endTime;
-    set<int> preTasks;
-    set<int> postTasks;
+    int preTasks;
+    vector<int> postTasks;
 
     Task(int d): duration(d), endTime(0)
     {
@@ -31,10 +31,10 @@ void Topology()
 
         for (auto& post : tasks[idx].postTasks)
         {
-            tasks[post].preTasks.erase(idx);
+            tasks[post].preTasks--;
             tasks[post].endTime = max(tasks[post].endTime, tasks[idx].endTime + tasks[idx].duration);
 
-            if (tasks[post].preTasks.empty())
+            if (tasks[post].preTasks == 0)
             {
                 q.push(post);
             }
@@ -75,15 +75,16 @@ int main()
 
         tasks.push_back(Task(d));
 
+        tasks[i].preTasks = p;
+        
         for (int j = 0; j < p; j++)
         {
             int t;
             cin >> t;
-            tasks[i].preTasks.insert(t);
-            tasks[t].postTasks.insert(i);
+            tasks[t].postTasks.push_back(i);
         }
 
-        if (tasks[i].preTasks.empty())
+        if (tasks[i].preTasks == 0)
         {
             q.push(i);
         }
