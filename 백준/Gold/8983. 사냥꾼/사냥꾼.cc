@@ -20,6 +20,7 @@ int main()
 		cin >> shootPoints[i];
 	}
 
+	sort(shootPoints.begin(), shootPoints.end());
 
 	int ans = 0;
 	for (int i = 0; i < N; i++)
@@ -27,16 +28,15 @@ int main()
 		int x, y;
 		cin >> x >> y;
 
-		for (int j = 0; j < M; j++)
-		{
-			int dist = abs(x - shootPoints[j]);
-			dist += y;
+		int dist = L - y;
+		if (dist < 0) continue;
 
-			if (dist <= L)
-			{
-				ans++;
-				break;
-			}
+		//왼쪽 탐색
+		auto leftIdx = lower_bound(shootPoints.begin(), shootPoints.end(), x - dist) - shootPoints.begin();
+		auto rightIdx = upper_bound(shootPoints.begin(), shootPoints.end(), x + dist) - shootPoints.begin();
+		if (leftIdx < rightIdx)
+		{
+			ans++;
 		}
 	}
 
