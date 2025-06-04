@@ -20,21 +20,10 @@ int main()
         {
             letters.push_back(-1);
         }
-        else if (isalnum(str[i])) 
-        {
-            if (i < str.size() - 1 && str[i + 1] == '(')
-            {
-                letters.push_back(str[i] - '0');
-            }
-            else
-            {
-                letters.push_back(1);
-            }
-        }
-        else 
+        else if (str[i] == ')')
         {
             int len = 0;
-            while (letters.back() != -1) 
+            while (letters.back() != -1)
             {
                 len += letters.back();
                 letters.pop_back();
@@ -45,6 +34,17 @@ int main()
             letters.pop_back();
 
             letters.push_back(len);
+        }
+        else
+        {
+            if (i < str.size() - 1 && str[i + 1] == '(')
+            {
+                letters.push_back(str[i] - '0');
+            }
+            else
+            {
+                letters.push_back(1);
+            }
         }
     }
 
