@@ -11,29 +11,21 @@ vector<int> rightCards;
 vector<vector<int>> dp;
 int ans = 0;
 
-void DFS(int l, int r, int score)
+int DFS(int l, int r)
 {
-	if (l == N || r == N)
-	{
-		ans = max(ans, score);
-		return;
-	}
-
 	// 가지치기
-	if (dp[l][r] >= score) return;
-	dp[l][r] = score;
+	if (l == N || r == N) return 0;
+	if (dp[l][r] != -1) return dp[l][r];
+
+	dp[l][r] = max(DFS(l + 1, r), DFS(l + 1, r + 1));
 
 	//오른쪽 버리기
 	if (leftCards[l] > rightCards[r])
 	{
-		DFS(l, r + 1, score + rightCards[r]);
+		dp[l][r] = max(dp[l][r], DFS(l, r + 1) + rightCards[r]);
 	}
 
-	//왼쪽만 버리기
-	DFS(l + 1, r, score);
-
-	//둘다 버리기
-	DFS(l + 1, r + 1, score);
+	return dp[l][r];
 }
 
 int main()
@@ -57,9 +49,7 @@ int main()
 		cin >> rightCards[i];
 	}
 
-	DFS(0, 0, 0);
-
-	cout << ans;
+	cout << DFS(0, 0);
 
 	return 0;
 }
