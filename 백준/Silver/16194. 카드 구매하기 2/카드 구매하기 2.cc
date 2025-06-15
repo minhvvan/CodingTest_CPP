@@ -1,55 +1,36 @@
-#include <bits/stdc++.h>
-#include <unordered_set>
-using namespace std;
-#define INPUT_OPTIMIZE cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
-#define INF 2e9
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <queue>
+#include <cstring>
 
 using namespace std;
+#define fastio ios::sync_with_stdio(false); cin.tie(0); cout.tie(nullptr);
+
+const int MX = 1000;
 int N;
-vector<int> cards;
-vector<vector<int>> dp;
-const int MAX = 987654321;
+int arr[MX];
+int dp[MX+1];
 
-int main()
-{
-	INPUT_OPTIMIZE;
-	
-	cin >> N;
-	cards.resize(N + 1);
-	dp.resize(N + 1, vector<int>(N + 1, MAX));
+int main(void){
+    fastio;
+    
+    cin >> N;
+    for(int i=0; i<N; i++){
+        cin >> arr[i];
+    }
 
-	for (int i = 1; i <= N; i++)
-	{
-		cin >> cards[i];
-	}
+    fill(dp+1, dp+N+1, 1e9);
 
-	/*
-	* 1 5 6 7
-	* 
-	* 
-	* 1 2 3 4 5 6 7
-	* 
-	*/
+    for(int idx=1; idx<=N; idx++){
+        for(int i=1; i<=idx; i++){
+            dp[idx] = min(dp[idx], dp[idx-i] + arr[i-1]);
+        }
+    }
 
-	for (int i = 0; i <= N; i++) dp[i][0] = 0;
+    cout << dp[N] << '\n';
 
-	for (int i = 1; i <= N; i++)
-	{
-		//i번 카드를 사용하여 만들 수 있는 값들
-		for (int j = 1; j <= N; j++)
-		{
-			dp[i][j] = min(dp[i][j], dp[i - 1][j]);
-
-			int k = 1;
-			while (k * i <= j)
-			{
-				dp[i][j] = min(dp[i][j], dp[i - 1][j - k * i] + k * cards[i]);
-				k++;
-			}
-		}
-	}
-
-	cout << dp[N][N];
-
-	return 0;
+    return 0;
 }
